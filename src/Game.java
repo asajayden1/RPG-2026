@@ -17,6 +17,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private Queue<Enemy> enemies;
 	private long lastShot;
 	private long lastEnemyHit;
+	private int maxHealth;
 
 
 	public Game() {
@@ -43,6 +44,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		Queue<Enemy> temp = new LinkedList<Enemy>();
 		temp.add(new Brute(1000, 300));
 		temp.add(new Brute(1100, 300));
+		temp.add(new Brute(1200, 300));
+		temp.add(new Brute(1300, 300));
 		return temp;
 	}
 
@@ -76,11 +79,15 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
 		Graphics2D twoDgraph = (Graphics2D) g;
 
+
+
 		if (back == null)
 			back = (BufferedImage) (createImage(getWidth(), getHeight()));
 
 
 		Graphics g2d = back.createGraphics();
+
+		
 
 		g2d.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), null);
 		//start coding here
@@ -142,12 +149,23 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		}
 
 		// drawing
-		g2d.setColor(Color.WHITE);
 		mainChar.drawCharAndWeap(g2d);
-		g2d.drawString("Health: " + Math.max(0, mainChar.getHealth()), mainChar.getX(), mainChar.getY() - 10);
+
+		// change health text to red when health is 50%
+		if (mainChar.getHealth() < maxHealth * 0.5) {
+    	g2d.setColor(Color.RED);
+		} else {
+    	g2d.setColor(Color.WHITE);
+		}
+
+		g2d.drawString("Health: " + Math.max(0, mainChar.getHealth()),
+        mainChar.getX(), mainChar.getY() - 10);
+
+		g2d.setColor(Color.WHITE);
 
 		if (e != null) {
 			e.drawCharAndWeap(g2d);
+			g2d.setColor(Color.WHITE);
 			g2d.drawString("Health: " + e.getHealth(), e.getX(), e.getY() - 10);
 		}
 
@@ -179,6 +197,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		g2d.drawString("Click a character to start", 600, 100);
 		for (Characters c : displayChars) {
 			c.drawChar(g2d);
+			g2d.setColor(Color.WHITE);
 			g2d.drawString(c.getName(), c.getX(), c.getY() + c.getH() + 20);
 			g2d.drawString(c.getStats(), c.getX(), c.getY() + c.getH() + 40);
 		}
@@ -200,6 +219,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			for (Characters c : displayChars) {
 				if (e.getX() > c.getX() && e.getX() < c.getX() + c.getW() && e.getY() > c.getY() && e.getY() < c.getY() + c.getH()) {
 					mainChar = c;
+					maxHealth = mainChar.getHealth();
 					mainChar.setX(100);
 					mainChar.setY(300);
 					enemies = setEs();
@@ -236,8 +256,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			long now = System.currentTimeMillis();
 			Weapon w = mainChar.getWeapon();
 
-			// attackSpeed is attacks per second, so wait between attacks
-			if (now - lastShot < 1000 / w.getAttackSpeed()) {
+			// attackSpeed
+			if (now - lastShot < 200 / w.getAttackSpeed()) {
 				return;
 			}
 			lastShot = now;

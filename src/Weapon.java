@@ -29,7 +29,7 @@ public class Weapon {
 
     // moves a fired weapon to the right
     public void move() {
-        x += 6;
+        x += 65;
     }
 
     public void draw(Graphics g) {

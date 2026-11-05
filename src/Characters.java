@@ -1,4 +1,5 @@
 import java.awt.Graphics;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
@@ -59,14 +60,20 @@ public class Characters {
     // draws just the character
     public void drawChar(Graphics g2d) {
         g2d.drawImage(pic.getImage(), x, y, w, h, null);
+
+        g2d.setColor(Color.RED);
+        g2d.fillRect(x, y-50, health *5, 10);
+    
     }
 
     // draws the character and puts the weapon in front of them
     public void drawCharAndWeap(Graphics g2d) {
+
         drawChar(g2d);
         weapon.setX(x + w - 25);
         weapon.setY(y + h / 2);
         weapon.draw(g2d);
+
     }
 
     public void setArrayList(Weapon w) {
