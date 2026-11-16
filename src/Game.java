@@ -19,12 +19,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	private long lastEnemyHit;
 	private int maxHealth;
 
-
+    
 	public Game() {
 
 		//This is the music
 		Player p = new Player();
-		p.playmusic("track02.wav");
+		p.playmusic("divemix.wav");
 		enemies = setEs();
 		this.addKeyListener(this);
 		this.addMouseListener(this);
@@ -261,6 +261,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 				return;
 			}
 			lastShot = now;
+
+			if (mainChar instanceof Mage) {
+    		((Mage) mainChar).attack();
+			}
 
 			if (w instanceof Ranged) {
 				// fire a new weapon from the player
